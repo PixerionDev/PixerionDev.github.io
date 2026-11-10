@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="robots" content="noindex" />
+    <title>Kelime Labirenti — Yarış / Race</title>
+    <meta property="og:title" content="Kelime Labirenti — Yarış daveti" />
+    <meta
+      property="og:description"
+      content="Aynı bulmaca, aynı an. Odaya katıl! · Same puzzle, same moment. Join the room!"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      :root {
+        --bg: #f6f2ea;
+        --ink: #1c1a17;
+        --muted: #6b655c;
+        --tile: #ffffff;
+        --edge: #2a3fd6;
+        --accent: #3d5afe;
+        --on-accent: #ffffff;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #16171b;
+          --ink: #f6f2ea;
+          --muted: #a19d95;
+          --tile: #f4f1ea;
+          --accent: #4460f5;
+        }
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg);
+        color: var(--ink);
+        font:
+          17px/1.5 system-ui,
+          sans-serif;
+        padding: 24px 16px;
+      }
+      main {
+        width: 100%;
+        max-width: 420px;
+        text-align: center;
+      }
+      h1 {
+        font-size: 28px;
+        line-height: 1.2;
+        margin: 0 0 8px;
+      }
+      p {
+        color: var(--muted);
+        margin: 0 0 24px;
+      }
+      .code {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        margin: 0 0 28px;
+      }
+      .code span {
+        width: 52px;
+        height: 56px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        background: var(--tile);
+        color: #16171b;
+        font-size: 28px;
+        font-weight: 800;
+        box-shadow: 0 4px 0 var(--edge);
+      }
+      a.button {
+        display: block;
+        padding: 16px;
+        border-radius: 999px;
+        background: var(--accent);
+        color: var(--on-accent);
+        font-weight: 700;
+        text-decoration: none;
+        margin: 0 0 16px;
+      }
+      .stores {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .stores a {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1 id="title">Kelime Labirenti yarışına davetlisin</h1>
+      <p id="lead">Aynı bulmaca, aynı an. Uygulamayı aç ve odaya katıl.</p>
+      <div class="code" id="code" aria-label="Oda kodu"></div>
+      <a class="button" id="open" href="kelimelabirenti://race">Uygulamada aç</a>
+      <p id="manual">Açılmazsa uygulamada Yarış → Koda katıl'a bu kodu yaz.</p>
+      <div class="stores">
+        <a id="ios" href="https://apps.apple.com/app/id6824283299">App Store</a>
+        <a id="android" href="https://play.google.com/store/apps/details?id=pixeriondev.kelimelabirenti"
+          >Google Play</a
+        >
+      </div>
+    </main>
+    <script>
+      (function () {
+        var raw = new URLSearchParams(location.search).get('c') || '';
+        var code = raw
+          .toUpperCase()
+          .replace(/[^ABCDEFGHJKLMNPRSTUVYZ]/g, '')
+          .slice(0, 5);
+        var en = !/^tr\b/i.test(navigator.language || '');
+        if (en) {
+          document.documentElement.lang = 'en';
+          document.getElementById('title').textContent = "You're invited to a Kelime Labirenti race";
+          document.getElementById('lead').textContent =
+            'Same puzzle, same moment. Open the app and join the room.';
+          document.getElementById('open').textContent = 'Open in the app';
+          document.getElementById('manual').textContent =
+            "If it doesn't open, type this code under Race → Join with a code.";
+          document.getElementById('code').setAttribute('aria-label', 'Room code');
+        }
+        var box = document.getElementById('code');
+        if (code.length !== 5) {
+          box.classList.add('hidden');
+          document.getElementById('manual').classList.add('hidden');
+          return;
+        }
+        code.split('').forEach(function (c) {
+          var s = document.createElement('span');
+          s.textContent = c;
+          box.appendChild(s);
+        });
+        var app = 'kelimelabirenti://race?c=' + code;
+        document.getElementById('open').href = app;
+        // Try the app right away; the page stays as a fallback (code + store links).
+        setTimeout(function () {
+          location.href = app;
+        }, 300);
+      })();
+    </script>
+  </body>
+</html>
